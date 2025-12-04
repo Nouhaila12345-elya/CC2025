@@ -1,176 +1,144 @@
-\documentclass[12pt]{article}
-\usepackage{graphicx}
-\usepackage{booktabs}
-\usepackage{amsmath}
-\usepackage{float}
-\usepackage{hyperref}
-\usepackage{geometry}
-\geometry{margin=1in}
+Analyse Prédictive appliquée au Dataset Bancaire :
+Pré-traitement, EDA et Modélisation Machine Learning
 
-\title{Analyse Prédictive appliquée au Dataset Bancaire :\\
-Pré-traitement, EDA et Modélisation Machine Learning}
-\author{Nom de l'étudiante – ENCGS}
-\date{\today}
+El yazidi Nouhaila – ENCGS
+Date : Aujourd’hui
 
-\begin{document}
-\maketitle
+Table des matières
 
-\tableofcontents
-\newpage
+Introduction
 
-% --------------------------------------------------------------------
-\section{Introduction}
-Dans un contexte bancaire où la prise de décision doit être rapide, fiable et fondée sur 
-des données, la prédiction du comportement des clients constitue un enjeu majeur. 
-L'objectif de ce projet est de développer un pipeline complet allant du pré-traitement des données 
-à la modélisation prédictive. Le dataset bancaire à analyser contient des informations 
-socio-économiques, comportementales et transactionnelles des clients.
+Méthodologie
 
-Ce rapport présente les choix méthodologiques, les analyses exploratoires, les performances 
-des modèles testés ainsi que les limites de l’approche.
+Pré-traitement des données
 
-% --------------------------------------------------------------------
-\section{Méthodologie}
+Analyse Exploratoire des Données (EDA)
 
-\subsection{Pré-traitement des données}
+Modélisation
 
-\subsubsection{Nettoyage}
-Les doublons ont été supprimés afin d’assurer une base fiable.  
-Les types ont été harmonisés (variables transformées en \texttt{int}, \texttt{float}, \texttt{category}).
+Conclusion
 
-\subsubsection{Imputation}
-Les valeurs manquantes ont été traitées par :
-\begin{itemize}
-    \item la médiane pour les variables numériques (robuste aux valeurs extrêmes),
-    \item la catégorie "Unknown" pour certaines variables catégorielles,
-    \item une imputation KNN pour les variables ayant une structure complexe.
-\end{itemize}
+Introduction
 
-\subsubsection{Encodage}
-Selon la nature des variables :
-\begin{itemize}
-    \item One-Hot Encoding pour les variables nominales,
-    \item Label Encoding pour les variables ordinales,
-    \item Target Encoding pour les variables catégorielles fortement corrélées à la cible.
-\end{itemize}
+Dans un contexte bancaire où la prise de décision doit être rapide, fiable et fondée sur des données, la prédiction du comportement des clients constitue un enjeu majeur.
+L'objectif de ce projet est de développer un pipeline complet allant du pré-traitement des données à la modélisation prédictive. Le dataset bancaire analysé contient des informations socio-économiques, comportementales et transactionnelles.
 
-\subsubsection{Normalisation}
-Une standardisation par Z-score a permis d’homogénéiser les échelles des variables 
-avant la modélisation, particulièrement utile pour SVM et KNN.
+Ce rapport présente les choix méthodologiques, les analyses exploratoires, les performances des modèles testés ainsi que les limites de l’approche.
 
-% --------------------------------------------------------------------
-\section{Analyse Exploratoire des Données (EDA)}
+Méthodologie
+1. Pré-traitement des données
+a. Nettoyage
 
-\subsection{Visualisation des distributions}
-La Figure \ref{fig:hist_age} montre la distribution des âges, révélant une concentration entre 25 et 55 ans.
+Suppression des doublons.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.7\linewidth]{hist_age.png}
-    \caption{Distribution de l'âge des clients}
-    \label{fig:hist_age}
-\end{figure}
+Harmonisation des types (int, float, category).
 
-\subsection{Détection d'outliers}
-Les boxplots (Fig. \ref{fig:boxplots}) indiquent la présence de valeurs extrêmes 
-notamment dans les variables \texttt{balance} et \texttt{duration}.
+b. Imputation
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\linewidth]{boxplots.png}
-    \caption{Boxplots des variables numériques}
-    \label{fig:boxplots}
-\end{figure}
+Médiane pour les variables numériques.
 
-\subsection{Analyse des corrélations}
-La heatmap (Fig. \ref{fig:heatmap}) met en évidence une corrélation positive importante 
-entre \texttt{duration} et la variable cible. Cette variable joue un rôle essentiel dans la prédiction.
+Catégorie Unknown pour certaines variables catégorielles.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.85\linewidth]{heatmap_corr.png}
-    \caption{Matrice des corrélations}
-    \label{fig:heatmap}
-\end{figure}
+Imputation KNN pour les variables complexes.
 
-\subsection{Feature Engineering}
-Pour améliorer la pertinence du dataset :
-\begin{itemize}
-    \item création d’une variable \textbf{AgeGroup} (jeune, adulte, senior),
-    \item transformation logarithmique de \texttt{balance},
-    \item création d’un indicateur \textbf{ContactedBefore} basé sur \texttt{campaign} et \texttt{previous}.
-\end{itemize}
+c. Encodage
 
-% --------------------------------------------------------------------
-\section{Modélisation}
+One-Hot Encoding (variables nominales).
 
-\subsection{Algorithmes testés}
-Trois modèles ont été sélectionnés :
-\begin{itemize}
-    \item Logistic Regression,
-    \item Random Forest,
-    \item XGBoost.
-\end{itemize}
+Label Encoding (variables ordinales).
 
-\subsection{Validation et optimisation}
-Une Cross-Validation à 5 folds a été appliquée.  
-L’optimisation des hyperparamètres a été réalisée via GridSearchCV.
+Target Encoding (variables fortement corrélées à la cible).
 
-\subsection{Performances des modèles}
+d. Normalisation
 
-\begin{table}[H]
-\centering
-\begin{tabular}{lcccc}
-\toprule
-\textbf{Modèle} & Accuracy & F1-score & ROC-AUC & RMSE \\
-\midrule
-Logistic Regression & 0.84 & 0.79 & 0.89 & 0.41 \\
-Random Forest       & 0.91 & 0.88 & 0.94 & 0.33 \\
-XGBoost             & 0.93 & 0.90 & 0.96 & 0.29 \\
-\bottomrule
-\end{tabular}
-\caption{Comparaison des performances des modèles}
-\end{table}
+Standardisation Z-score, utile pour SVM et KNN.
 
-\subsection{Courbe ROC}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.75\linewidth]{roc_curve.png}
-    \caption{Courbes ROC des trois modèles}
-\end{figure}
+Analyse Exploratoire des Données (EDA)
+1. Visualisation des distributions
 
-\subsection{Analyse des erreurs}
-La matrice de confusion de XGBoost (Fig. \ref{fig:confusion}) montre que :
-\begin{itemize}
-    \item les faux positifs restent modérés,
-    \item les faux négatifs sont faibles, ce qui est important pour un modèle bancaire.
-\end{itemize}
+La distribution des âges montre une concentration entre 25 et 55 ans.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.65\linewidth]{confusion_matrix.png}
-    \caption{Matrice de confusion – modèle XGBoost}
-    \label{fig:confusion}
-\end{figure}
+📌 Figure : Distribution de l’âge
+.png
 
-% --------------------------------------------------------------------
-\section{Conclusion}
+2. Détection d’outliers
 
-Le modèle XGBoost offre les meilleures performances globales avec un ROC-AUC de 0.96.  
-Cependant, plusieurs limites subsistent :
-\begin{itemize}
-    \item le dataset est fortement déséquilibré,
-    \item certaines variables (ex : \texttt{duration}) sont connues uniquement post-contact,
-    \item un risque de surapprentissage existe malgré la régularisation.
-\end{itemize}
+Les boxplots montrent des valeurs extrêmes dans balance et duration.
 
-\textbf{Pistes d’amélioration :}
-\begin{itemize}
-    \item appliquer du SMOTE pour le rééquilibrage,
-    \item développer un modèle temps-réel sans \texttt{duration},
-    \item tester des modèles de deep learning,
-    \item intégrer plus de variables socio-comportementales.
-\end{itemize}
+📌 Figure : Boxplots des variables numériques
+boxplots.png
 
-\end{document}
+3. Analyse des corrélations
+
+La heatmap révèle une forte corrélation positive entre duration et la variable cible.
+
+📌 Figure : Matrice des corrélations
+heatmap_corr.png
+
+4. Feature Engineering
+
+Création de nouvelles variables pour enrichir le dataset :
+
+AgeGroup : jeune, adulte, senior
+
+Transformation logarithmique de balance
+
+Variable ContactedBefore basée sur campaign et previous
+
+Modélisation
+1. Algorithmes testés
+
+Logistic Regression
+
+Random Forest
+
+XGBoost
+
+2. Validation et optimisation
+
+Cross-Validation 5 folds
+
+Hyperparamètres optimisés via GridSearchCV
+
+3. Performances
+Modèle	Accuracy	F1-score	ROC-AUC	RMSE
+Logistic Regression	0.84	0.79	0.89	0.41
+Random Forest	0.91	0.88	0.94	0.33
+XGBoost	0.93	0.90	0.96	0.29
+4. Courbes ROC
+
+📌 Figure : Courbes ROC des modèles
+roc_curve.png
+
+5. Analyse des erreurs
+
+La matrice de confusion pour XGBoost montre :
+
+Faux positifs modérés
+
+Faux négatifs faibles (important pour une application bancaire)
+
+📌 Figure : Matrice de confusion
+confusion_matrix.png
+
+Conclusion
+
+Le modèle XGBoost présente les meilleures performances avec un ROC-AUC de 0.96.
+Cependant, certaines limites persistent :
+
+Dataset déséquilibré
+
+Variable duration disponible uniquement après contact
+
+Risque de surapprentissage
+
+Pistes d’amélioration
+
+Application de SMOTE
+
+Modèle temps réel sans duration
+
+Tester le deep learning
+
+Ajouter plus de variables comportementales
 
